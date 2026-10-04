@@ -1,0 +1,17 @@
+{
+  "name": "cc-mods-youtube",
+  "owner": {
+    "name": "Unayung"
+  },
+  "metadata": {
+    "description": "Claude Code mods for music: a cliamp-backed YouTube player"
+  },
+  "plugins": [
+    {
+      "name": "yt-control",
+      "source": "./plugins/yt-control",
+      "description": "A YouTube player inside Claude Code, backed by cliamp: controls, now playing, thumbnail and playlist",
+      "version": "1.0.0"
+    }
+  ]
+}

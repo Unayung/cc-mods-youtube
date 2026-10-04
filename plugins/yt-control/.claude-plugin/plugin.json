@@ -1,0 +1,43 @@
+{
+  "name": "yt-control",
+  "version": "1.0.0",
+  "description": "A YouTube player inside Claude Code, backed by cliamp: controls, now playing, thumbnail and playlist",
+  "author": {
+    "name": "Unayung"
+  },
+  "homepage": "https://github.com/Unayung/cc-mods-youtube",
+  "repository": "https://github.com/Unayung/cc-mods-youtube",
+  "license": "MIT",
+  "keywords": [
+    "youtube",
+    "music",
+    "cliamp",
+    "mod"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "position": {
+      "type": "string",
+      "title": "Player position",
+      "description": "above-prompt: band with buttons; pane: docked panel with buttons; prompt-hint: text after the hint line; status: text status line. Control with /yt in any mode.",
+      "default": "above-prompt",
+      "options": [
+        "above-prompt",
+        "pane",
+        "prompt-hint",
+        "status"
+      ]
+    },
+    "icons": {
+      "type": "string",
+      "title": "Icon style",
+      "description": "emoji works everywhere; nerd needs a Nerd Font; unicode is the plain fallback",
+      "default": "emoji",
+      "options": [
+        "emoji",
+        "nerd",
+        "unicode"
+      ]
+    }
+  }
+}
