@@ -4,6 +4,8 @@ A YouTube player inside [Claude Code](https://claude.com/claude-code), built as 
 
 Load a YouTube playlist with one command and control it without leaving the terminal. cliamp plays the audio, so no browser tab is needed.
 
+![yt-control: the Now playing pane with thumbnail, controls and queue beside a Claude Code session](docs/screenshot.png)
+
 - Previous / play-pause / next controls
 - Now playing: title, artist, progress
 - The video thumbnail, drawn in the terminal (kitty graphics terminals)
