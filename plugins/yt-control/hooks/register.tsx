@@ -21,6 +21,8 @@ type Icons = (typeof ICONS)['emoji']
 
 type Action = 'prev' | 'toggle' | 'next'
 const ACTIONS: readonly string[] = ['prev', 'toggle', 'next']
+// Leaving Claude Code, as opposed to /clear or switching sessions, which keep the process (and the music) going.
+const EXIT_REASONS: readonly string[] = ['prompt_input_exit', 'logout', 'other']
 
 type CliampTrack = { title?: string; artist?: string; path?: string; duration_secs?: number }
 
@@ -79,12 +81,14 @@ const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, Math.max(1,
 export const register: Register = (on, options) => {
   const position = String(options.position ?? 'above-prompt')
   const icons: Icons = ICONS[String(options.icons) as keyof typeof ICONS] ?? ICONS.emoji
+  const stopOnExit = options.stopOnExit !== false
 
   // session.start owns cliamp access; the buttons and /yt reach it through this.
   const api = {
     send: async (_: Action): Promise<unknown> => undefined,
     load: async (_: string): Promise<string> => 'Not ready yet.',
     check: async (): Promise<string | null> => 'Not ready yet.',
+    stop: async (_: number): Promise<unknown> => undefined,
     play: async (_: number): Promise<unknown> => undefined,
   }
 
@@ -125,14 +129,16 @@ export const register: Register = (on, options) => {
 
     let queueRevision = -1
     let lastStatus: string | undefined
-    const refresh = async () => {
+    // A malformed answer from cliamp skips one tick rather than throwing every 2s.
+    const refresh = () => tick().catch(() => undefined)
+    const tick = async () => {
       const r = await cliamp(['remote', 'state'])
       if (r.exitCode !== 0) {
         queueRevision = -1
         await update($, queue, () => null)
         await update($, now, () => null)
       } else {
-        const snapshot = JSON.parse(r.stdout).snapshot
+        const snapshot = JSON.parse(r.stdout).snapshot ?? {}
         const np = parseState(snapshot)
         const prev = await read($, now)
         const art = !np || position !== 'pane' ? null : prev?.path === np.path ? prev.art : await thumb(np.path)
@@ -176,7 +182,8 @@ export const register: Register = (on, options) => {
       }
       return found
     }
-    void api.check()
+    // The session may end (and the module unload) before this settles.
+    void api.check().catch(() => undefined)
 
     // The daemon resumes its last track on start; loading replaces that straight away.
     const ensureDaemon = async () => {
@@ -200,7 +207,7 @@ export const register: Register = (on, options) => {
         const r = await call('url.load', { path: url, play: true }, 120000)
         const j = r.exitCode === 0 ? JSON.parse(r.stdout) : null
         await refresh()
-        return j?.job?.result?.ok ? `Loaded ${j.job.result.total} tracks into cliamp.` : `cliamp could not load it: ${r.stdout || r.stderr}`
+        return j?.job?.result?.ok ? `Loaded ${j.job.result.total} track${j.job.result.total === 1 ? '' : 's'} into cliamp.` : `cliamp could not load it: ${r.stdout || r.stderr}`
       } catch (err) {
         return `Loading failed: ${String(err)}`
       } finally {
@@ -215,7 +222,17 @@ export const register: Register = (on, options) => {
       await call('queue.play', { index })
       await refresh()
     }
+    api.stop = (timeoutMs: number) => cliamp(['stop'], timeoutMs)
 
+    return next(e)
+  })
+
+  // ponytail: stops cliamp even when another Claude Code window started the music; track ownership if that bites
+  on('session.end', async ($, e, next) => {
+    if (stopOnExit && EXIT_REASONS.includes(e.reason)) {
+      // Exits share one short budget; a missing or idle cliamp must not hold the exit up.
+      await api.stop(Math.max(1, Math.min(1000, next.budget.remainingMs - 50))).catch(() => undefined)
+    }
     return next(e)
   })
 

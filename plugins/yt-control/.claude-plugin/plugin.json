@@ -1,6 +1,6 @@
 {
   "name": "yt-control",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A YouTube player inside Claude Code, backed by cliamp: controls, now playing, thumbnail and playlist",
   "author": {
     "name": "Unayung"
@@ -38,6 +38,12 @@
         "nerd",
         "unicode"
       ]
+    },
+    "stopOnExit": {
+      "type": "boolean",
+      "title": "Stop music on exit",
+      "description": "Stop cliamp playback when Claude Code exits (not on /clear or resume). Turn off if you run cliamp on its own.",
+      "default": true
     }
   }
 }

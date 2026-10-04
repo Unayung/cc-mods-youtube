@@ -31,7 +31,7 @@ claude plugin marketplace add Unayung/cc-mods-youtube
 claude plugin install yt-control@cc-mods-youtube
 ```
 
-Then start a new Claude Code session. The install may say that two options are not set yet; both have defaults, so this is safe to ignore.
+Then start a new Claude Code session. The install may say that some options are not set yet; all have defaults, so this is safe to ignore.
 
 ## Use
 
@@ -70,6 +70,7 @@ Open `/config` and look for yt-control:
 |---|---|---|
 | Player position | `above-prompt`: a band with buttons above the prompt<br>`pane`: the Now playing pane with thumbnail and queue<br>`prompt-hint`: text after the hint line under the prompt<br>`status`: a status line | `above-prompt` |
 | Icon style | `emoji`, `nerd` (needs a [Nerd Font](https://www.nerdfonts.com/)), `unicode` | `emoji` |
+| Stop music on exit | stop cliamp when you leave Claude Code (`/exit`, ctrl+c, closing the terminal); `/clear` and switching sessions keep it playing. Turn it off if you run cliamp on its own | on |
 
 `/yt show` opens the pane whatever the position is.
 

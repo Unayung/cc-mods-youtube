@@ -11,7 +11,7 @@
       "name": "yt-control",
       "source": "./plugins/yt-control",
       "description": "A YouTube player inside Claude Code, backed by cliamp: controls, now playing, thumbnail and playlist",
-      "version": "1.0.0"
+      "version": "1.1.0"
     }
   ]
 }
