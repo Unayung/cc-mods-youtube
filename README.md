@@ -31,7 +31,7 @@ claude plugin marketplace add Unayung/cc-mods-youtube
 claude plugin install yt-control@cc-mods-youtube
 ```
 
-Then start a new Claude Code session. The install prints that two options are not set yet; both have defaults, so this is safe to ignore.
+Then start a new Claude Code session. The install may say that two options are not set yet; both have defaults, so this is safe to ignore.
 
 ## Use
 
@@ -100,7 +100,7 @@ Thumbnails are cached in `/tmp/yt-control-art/`.
 
 The mod polls `cliamp remote state` every 2 seconds and reads the queue with `cliamp remote call queue.list` when the playlist changes. Controls call `cliamp prev|toggle|next`; clicking a track calls `queue.play` with its index. Loading runs `queue.clear` then `url.load`. Thumbnails come from `i.ytimg.com` by video id.
 
-Nothing the mod reads (titles, the queue) is sent to the model. It only draws in the terminal.
+The band, pane and status line are drawn in the terminal only; the mod adds nothing to the system prompt and registers no tool for the model. The one-line reply of a `/yt` command (for example `▶️ Artist - Title`) is an ordinary command output line in the transcript.
 
 ## Development
 
